@@ -1,4 +1,4 @@
-export default function SortControl({onSelect}) {
+export default function SortControl({sortBy, onSelect}) {
   return (
     <>
       <details className="dropdown mb-32">
