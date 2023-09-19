@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import MovieList from '../components/MovieList.jsx';
 import MovieDetails from '../components/MovieDetails.jsx';
 import SearchForm from '../components/SearchForm.jsx';
 import GenreSelect from '../components/GenreSelect.jsx';
-import SortControl from "../components/SortControl.jsx";
+import SortControl from '../components/SortControl.jsx';
 
 const sortByOptions = {
   'Release Date': 'Release Date',
@@ -13,12 +13,23 @@ const sortByOptions = {
 
 export default function MovieListPage() {
   const [movie, setMovie] = useState(null);
+  const [movies, setMovies] = useState([]);
   const [genre, setGenre] = useState({ id: '13a5fee2-47e2-11ee-be56-0242ac120002', name: 'comedy' });
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState(sortByOptions["Release Date"]);
 
   const genres = getGenres();
-  const movies = getMovies();
+
+  useEffect(() => {
+    requestMovies();
+  }, []);
+
+  async function requestMovies() {
+    const response = await fetch('http://localhost:4000/movies');
+    const moviesResponse = await response.json();
+    setMovies(moviesResponse.data);
+  }
+
 
   function onSelectMovie(movie) {
     console.log('[you select movie]: ', movie);
