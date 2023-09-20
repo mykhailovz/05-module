@@ -21,11 +21,33 @@ export default function MovieListPage() {
   const genres = getGenres();
 
   useEffect(() => {
-    requestMovies();
-  }, [sortBy, genre]);
+    if (genre.name === 'all' && !searchQuery) {
+      getMovies();
+      return;
+    }
 
-  async function requestMovies() {
+    if (searchQuery) {
+      searchMoviesByTitle(searchQuery);
+      return;
+    }
+
+    getMoviesByGenre();
+  }, [sortBy, genre, searchQuery]);
+
+  async function getMovies() {
+    const response = await fetch(`http://localhost:4000/movies?sortBy=${sortBy}&sortOrder=desc`);
+    const moviesResponse = await response.json();
+    setMovies(moviesResponse.data);
+  }
+
+  async function getMoviesByGenre() {
     const response = await fetch(`http://localhost:4000/movies?searchBy=genres&filter=${genre.name}&sortBy=${sortBy}&sortOrder=desc`);
+    const moviesResponse = await response.json();
+    setMovies(moviesResponse.data);
+  }
+
+  async function searchMoviesByTitle(title) {
+    const response = await fetch(`http://localhost:4000/movies?search=${title}&searchBy=title`);
     const moviesResponse = await response.json();
     setMovies(moviesResponse.data);
   }
