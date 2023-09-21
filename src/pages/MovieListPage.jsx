@@ -5,6 +5,7 @@ import MovieDetails from '../components/MovieDetails.jsx';
 import SearchForm from '../components/SearchForm.jsx';
 import GenreSelect from '../components/GenreSelect.jsx';
 import SortControl from '../components/SortControl.jsx';
+import MovieCounter from '../components/MovieCounter.jsx';
 
 const sortByOptions = {
   'Release Date': 'release_date',
@@ -52,7 +53,6 @@ export default function MovieListPage() {
     setMovies(moviesResponse.data);
   }
 
-
   function onSelectMovie(movie) {
     console.log('[you select movie]: ', movie);
     setMovie(movie);
@@ -73,12 +73,20 @@ export default function MovieListPage() {
     setSortBy(sortByOptions[sortBy]);
   }
 
+  function onMovieDetailsSearchClick() {
+    console.log('you click on movie details to search movies');
+    setMovie(null);
+  }
+
   return (
     <>
-      <SearchForm defaultSearchQuery={searchQuery} onSearch={onSearch} />
+      {
+        !movie && <SearchForm defaultSearchQuery={searchQuery} onSearch={onSearch} />
+      }
       <GenreSelect genres={genres} genre={genre} onSelect={onGenreSelect} />
       <SortControl sortBy={sortBy} onSelect={onSortBySelect} />
-      <MovieDetails movie={movie}/>
+      <MovieDetails movie={movie} onClick={onMovieDetailsSearchClick} />
+      <MovieCounter movies={movies} />
       <MovieList movies={movies} onSelectMovie={onSelectMovie} />
     </>
 
