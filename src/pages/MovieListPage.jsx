@@ -7,6 +7,8 @@ import GenreSelect from '../components/GenreSelect.jsx';
 import SortControl from '../components/SortControl.jsx';
 import MovieCounter from '../components/MovieCounter.jsx';
 
+import useMovies from '../hooks/useMovies.js';
+
 const sortByOptions = {
   'Release Date': 'release_date',
   'Title': 'title'
@@ -14,44 +16,12 @@ const sortByOptions = {
 
 export default function MovieListPage() {
   const [movie, setMovie] = useState(null);
-  const [movies, setMovies] = useState([]);
   const [genre, setGenre] = useState({ id: '13a5fee2-47e2-11ee-be56-0242ac120002', name: 'comedy' });
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState(sortByOptions["Release Date"]);
+  const [movies] = useMovies(genre, searchQuery, sortBy);
 
   const genres = getGenres();
-
-  useEffect(() => {
-    if (genre.name === 'all' && !searchQuery) {
-      getMovies();
-      return;
-    }
-
-    if (searchQuery) {
-      searchMoviesByTitle(searchQuery);
-      return;
-    }
-
-    getMoviesByGenre();
-  }, [sortBy, genre, searchQuery]);
-
-  async function getMovies() {
-    const response = await fetch(`http://localhost:4000/movies?sortBy=${sortBy}&sortOrder=desc`);
-    const moviesResponse = await response.json();
-    setMovies(moviesResponse.data);
-  }
-
-  async function getMoviesByGenre() {
-    const response = await fetch(`http://localhost:4000/movies?searchBy=genres&filter=${genre.name}&sortBy=${sortBy}&sortOrder=desc`);
-    const moviesResponse = await response.json();
-    setMovies(moviesResponse.data);
-  }
-
-  async function searchMoviesByTitle(title) {
-    const response = await fetch(`http://localhost:4000/movies?search=${title}&searchBy=title`);
-    const moviesResponse = await response.json();
-    setMovies(moviesResponse.data);
-  }
 
   function onSelectMovie(movie) {
     console.log('[you select movie]: ', movie);
