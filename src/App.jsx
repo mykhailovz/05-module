@@ -1,12 +1,15 @@
-import SortControl from './components/SortControl';
+import { useState } from 'react';
+
 import AddMovie from './components/AddMovie';
 import EditMovie from './components/EditMovie';
 import DeleteMovie from './components/DeleteMovie';
 import MovieAdded from './components/MovieAdded';
+import Alert from './components/Alert.jsx';
 
 import MovieListPage from './pages/MovieListPage.jsx';
 
 function App() {
+  const [showAlert, setShowAlert] = useState(false);
   function handleAdd() {
     document.getElementById('add-movie').showModal();
   }
@@ -34,6 +37,10 @@ function App() {
     image: 'https://flxt.tmsimg.com/assets/p15684_p_v13_an.jpg'
   };
 
+  function handleAlert() {
+    setShowAlert(!showAlert);
+  }
+
   return (
     <>
       <MovieListPage />
@@ -44,12 +51,16 @@ function App() {
         <li onClick={() => handleEdit()}><button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Edit Movie Modal</button></li>
         <li onClick={() => handleDelete()}><button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Delete Movie Modal</button></li>
         <li onClick={() => handleMovieAdded()}><button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Movie Added Modal</button></li>
+        <li onClick={() => handleAlert()}><button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>handle alert</button></li>
       </ul>
 
       <AddMovie />
       <EditMovie movie={movieToEdit} />
       <DeleteMovie />
       <MovieAdded />
+      {
+        showAlert && <Alert onClose={setShowAlert}><p>Error happened</p></Alert>
+      }
     </>
   );
 }
